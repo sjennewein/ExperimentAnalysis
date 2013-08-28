@@ -1,0 +1,86 @@
+<html>
+<head>
+<title>MATPVCAM README</title>
+</head>
+
+<body>
+<p><b><u>MATPVCAM setup</u></b></p>
+<p>These routines allow users to operate Photometrics cameras with PVCAM interfaces under MATLAB.  These routines have been used with PVCAM version 2.76 and MATLAB R2007a running under Win2kSP4 and WinXP.  Other versions of MATLAB and PVCAM may also be used with little or no code modification.  To setup this suite of programs:</p>
+<ol>
+<li>Unzip contents of this ZIP file to C:\MATPVCAM directory
+<li>Start MATLAB
+<li>Add C:\MATPVCAM and subdirectories to the MATLAB path
+<li>Remove the C:\MATPVCAM\PVCAM\SOURCE subdirectory from the MATLAB path
+</ol>
+<p><b><u>Imaging interfaces</u></b></p>
+<p>Three different MATLAB GUIs have been included for different types of imaging applications, and demonstrate how the PVCAM MEX files (see below) can be utilized:</p>
+<p>The ANATSEQ interface allows a user to obtain a sequence of images at different focal sections for morphologic reconstruction.  Single image acquisition is triggered by the user pressing the Snap Image button; the Start Focus button provides continuous, unsaved image acquisition for focusing.  Type 'anatseq' from the MATLAB command window to launch this application.</p>
+<p>The FLUOSEQ interface allows a user to obtain a sequence of images at timed intervals during pharmacologic manipulations.  The user can select an ROI for real-time fluorescence measurements that are displayed in the lower graph window throughout the experiment.  Type 'fluoseq' from the MATLAB command window to launch this application.</p>
+<p>The PMTMODE interface allows for rapid image acquisition from a binned collection of pixels.  After acquiring a single high-spatial resolution image, the user can select a spot on the displayed image to obtain a series of high-temporal resolution pixel intensities by clicking on the spot under the mouse pointer.  After a high-speed acquisition is completed, pixel intensities are displayed vs. image number in the lower graph window.  Type 'pmtmode' from the MATLAB command window to launch this application.</p>
+<p>Some general information on all three imaging interfaces is provided below:</p>
+<ul>
+<li>You may need to change the field names and values of the pvcam_getpar and pvcam_setpar structures under the case 'initialize' code depending on your camera model.  Use PVCAMPARLIST to find out what parameters on valid on your camera.
+<li>Each program searches for a Sutter Lambda 10-2 filter wheel and shutter connected to the computer via a RS-232 serial port.  The program will operate normally if this device is not detected.
+<li>In each application, clicking on the color bar at the right allows the user to select different palettes for pseudocolor image display.
+<li>Pixel intensities and locations are displayed above the image and are updated continuously as the user moves the mouse pointer over the displayed image.
+<li>Clicking the Parameters button allows the user to specify various parameters for image acquisition.
+<li>Clicking the Camera Parameters button allows the user to specify various camera parameters.
+<li>The ROI setup button allows the user to specify an ROI from which pixels are acquired, click the cross hair outside the image axes to reset the ROI and return to full frame images.
+<li>Saved images are stored as a TIF stack, you can use the MATLAB IMREAD( ) function to read these files.
+<li>Acquisition times for full-frame or ROI image acquisitions are saved in the TIF Description field.
+<li>Acquisition times are not stored for each pixel intensity during PMTMODE sequences.  To obtain precise image acquisition times, use an oscilloscope or data acquisition board to acquire the exposing output of the camera.
+</ul>
+<p><b><u>PVCAM MEX files</u></b></p>
+<p>The following MATLAB DLLs (MEX files) are included in this package to operate a PVCAM camera via the MATLAB command window or MATLAB scripts:</p>
+<p>DATA = PVCAMACQ(HCAM, NI, ROI, EXPTIME, EXPMODE) acquires a pixel stream DATA of NI images over the camera region(s) specified by the structure array ROI from the camera specified by HCAM.  ROI must have fields S1, S2 and SBIN for serial register (X coordinate) range and binning; and fields P1, P2 and PBIN for parallel register (Y coordinate) range and binning.  ROI can have multiple entries if images are to be acquired from multiple camera regions.  EXPTIME is the image exposure time (in ms).  EXPMODE is a string to specify how the image acquisition is triggered ('timed', 'trigger', 'strobe', 'bulb' or 'flash').  Use the ROIPARSE program to convert the pixel stream into an image stack.</p>
+<p>PVCAMCLOSE(HCAM) closes the PVCAM device specified by the handle to the open camera HCAM.</p>
+<p>STRUCT = PVCAMGET(HCAM, ID) obtains the parameter specified by the string ID from the PVCAM camera HCAM and returns STRUCT.  The fields in STRUCT will vary depending on whether ID is a numeric, string or enumerated parameter;  default fields include ACCESS (read-only, read/write, etc), TYPE ('numeric', 'string', 'enumerated'), CURRENT (current value) and DEFAULT (default value).  Valid parameter IDs are described in the PVCAM manual, and vary across cameras.  For example, STRuCT = PVCAMGET(HCAM, 'PARAM_TEMP') would read the temperature of a cooled camera.</p>
+<p>[DATA, ROI] = PVCAMICL(HCAM, SCRIPT) acquires an image sequence from ICL code in the character string SCRIPT.  If successful, DATA will be a vector of unsigned integers containing the image data acquired by the ICL script, and ROI will be a structure array that contains the fields X, Y and OFFSET to provide the size and offset of each PIXEL_DISPLAY( ) command issued within the ICL script.  If no images are acquired, such as a script to open or close the shutter, DATA = [] and ROI = "no image".  If an error occurs, DATA = [] and ROI = "error".  Use the syntax [DATA, ROI] = PVCAMICL(HCAM, [SCRIPT{:}]) if SCRIPT is a cell array of ICL code lines.  NOTE:  we have only been able to execute ICL script commands using a Quantix 57 camera.  This code does not function with CoolSNAP cameras.</p>
+<p>HCAM = PVCAMOPEN(NCAM) opens and initializes the PVCAM device specified by the integer NCAM and returns a handle to the open camera HCAM.  NCAM is the camera number on the system; the first camera is typically specified as NCAM = 0.</p>
+<p>PVCAMSET(HCAM, ID, VALUE) set the VALUE of the parameter specified by the string ID on the PVCAM camera HCAM.  Note that parameter accessibility and valid parameter values should be obtained by calling PVCAMGET first.</p>
+<p>PVCAMSHUTTER(HCAM, 'open') and PVCAMSHUTTER(HCAM, 'close') opens and closes the shutter of the PVCAM camera HCAM.</p>
+<p><b><u>PVCAM script files</u></b></p>
+<p>In addition to the PVCAM MEX files, the following MATLAB scripts (M files) are also provided to interface with PVCAM cameras through the MEX files listed above:<p>
+<p>PVCAMCOMPILE(PATH) compiles all of the PVCAM DLLs in the specified PATH.</p>
+<p>PVCAMEDITOR(HCAM, IDCELL) creates a GUI to display the values of the PVCAM parameters listed in the cell array IDCELL.  Users can edit numeric or string parameters, and select enumerated parameters from a drop down list.  This represents a convenient method for most users to simultaenously get and set a batch of camera parameters.  Parameter names are provided in the PVCAM manual and may vary by camera model.</p>
+<p>PVCAMFOCUS generates an image window that displays images acquired in a continuous acquisition mode for focusing the camera.  This code also provides an example of how the PVCAMICL DLL can be used to create ICL code for image acquisition.</p>
+<p>VALUE = PVCAMGETVALUE(HCAM, ID) obtains the parameter specified by the string ID from the PVCAM camera HCAM and returns the current parameter VALUE as a scalar or string.  Enumerated parameters are returned as strings.  Valid parameter IDs are described in the PVCAM manual, and vary across cameras.</p>
+<p>[LIST, STRUCT] = PVCAMPARLIST(HCAM) obtains all PVCAM parameter values for the PVCAM camera HCAM.  Parameter names are returned as the cell array LIST, and parameter values are returned in the array STRUCT.  The parameter value STRUCT also contains fields for parameter min/max values, parameter data types and read/write flags.</p>
+<p>PVCAMSETVALUE(HCAM, ID, VALUE) set the VALUE of the parameter specified by the string ID on the PVCAM camera HCAM.  Unlike PVCAMSETVALUE, enumerated parameters are specified by their string values rather than an integer that specifies the index of the parameter value in the enumerated list.</p>
+<p>Other script files include the following:</p>
+<ul>
+<li>LAMBDACTRL - routines to control Sutter Lambda 10-2 thru serial port
+<li>LAMBDAREAD - callback to read bytes on Lambda 10-2 serial port
+<li>ROIMASK - creates a mask array to indicate pixel locations (used by PVCAMFOCUS)
+<li>ROIOVERLAP - separate overlapping ROIs (used by ROIPARSE)
+<li>ROIPARSE - separate pixels from multiple ROIs
+</ul>
+<p><b><u>Sample Code</u></b></p>
+<p>Fluorescence imaging experiments typically involve the use of a shutter and/or filter wheel to control the illumination source for fluorescence excitation.  Our system incorporates a Sutter Lambda 10-2 filter wheel that can be controlled via the computer’s serial port; a MATLAB script called LAMBDACTRL is provided to control this device using the MATLAB serial port object.</p>
+<p>Because the filter wheel and shutter can operate slowly relative to the execution of MATLAB commands, any programs must wait for the filter wheel to report that any commands sent via the serial port have been completed.  To do this, we utilize a "callback" routine, or a script file that executes when bytes are returned from the Lambda 10-2 and are available to be read.  So a typical acquisition sequence would appear as follows:</p>
+h_cam = pvcamopen(0); % open camera connection
+<br>x_size = pvcamgetvalue(h_cam, 'PARAM_SER_SIZE'); % obtain size of serial register
+<br>y_size = pvcamgetvalue(h_cam, 'PARAM_PAR_SIZE'); % obtain size of parallel register
+<br>pvcamsetvalue(h_cam, 'PARAM_SPDTAB_INDEX', 2); % set camera to max readout speed
+<br>pvcamsetvalue(h_cam, 'PARAM_GAIN_INDEX', 2); % set camera to max gain
+<br>
+<br>% set the ROI structure to full camera array with full spatial detail (no binning)
+<br>roi_struct = cell2struct({0, x_size - 1, 1, 0, y_size - 1, 1}, {'s1', 's2', 'sbin', 'p1', 'p2', 'pbin'}, 2);
+<br>
+<br>% initialize filter wheel and open shutter
+<br>lambdactrl('initialize'); % connect to Lambda 10-2
+<br>lambdactrl('callback', 'IMAGE_ACQ'); % set callback function to IMAGE_ACQ
+<br>lambdactrl('open'); % open illumination shutter
+<br>return
+<br>
+<br>% IMAGE_ACQ (save as separate script file)
+<br>% acquire a single image
+<br>image_data = pvcamacq(h_cam, 1, roi_struct, 100, 'timed'); % acquire image
+<br>lambdactrl('callback', ' '); % no need to wait for shutter to close
+<br>lambdactrl('close'); % close illumination shutter
+<br>pvcamclose(h_cam); % close camera
+<br>image_data = roiparse(image_data, roi_struct);
+<br>image(image_data / 16); % display image (convert from 12 bit to 8 bit before display)
+</body>
+</html>
+
