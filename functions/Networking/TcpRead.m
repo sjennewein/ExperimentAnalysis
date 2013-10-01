@@ -9,17 +9,19 @@ import java.io.*
 
 
 if(isa(tcpStream, 'java.net.SocketInputStream') == 0)
-    message = 'Not the right Datatype!';
+    message = 'Not the right data type!';
     return;
 end
 
 d_tcpStream = DataInputStream(tcpStream);
 
-%maximum message is 4kB at the moment
-message = zeros(1,4096,'uint8');
+%maximum message is 256 byte at the moment
+message = zeros(1,1024,'uint8');
 run = 1;
 totalBytesToRead = 0;
 BytesRead = 0;
+loopCycles = 0;
+maxLoopCycles = 100;
 
 %check buffer until all expected bytes are read
 while(run == 1)
@@ -40,12 +42,22 @@ while(run == 1)
             message(BytesRead + i) = d_tcpStream.readByte;
         end        
         BytesRead = BytesRead + bytesAvailable;
+        loopCycles = 0;
     end
     
-    %check if all data has been read
-    if(BytesRead == totalBytesToRead )
+    %check if all data has been read and you have tried at least
+    %10 times to get data    
+    if(BytesRead >= totalBytesToRead && loopCycles > 9)
         run = 0;
     end
+    
+    %makes sure that the loop is left after a certain 
+    %amount of attempts to read data
+    if(loopCycles > maxLoopCycles)
+        run = 0;
+    end
+    
+    loopCycles = loopCycles + 1;
 end
 message = char(message(1:totalBytesToRead));
 end
