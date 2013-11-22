@@ -126,8 +126,8 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
 		mexErrMsgTxt("EXPTIME must be a scalar");
 	}
 	else {
-		exptime = (uns16) mxGetScalar(prhs[3]);
-	}
+		exptime = (uns32) mxGetScalar(prhs[3]);
+	}	
 
 	// obtain exposure mode
 	if (!mxIsChar(prhs[4])) {
