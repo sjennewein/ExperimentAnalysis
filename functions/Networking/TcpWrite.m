@@ -18,10 +18,15 @@ d_TcpStream = DataOutputStream(tcpStream);
 
 %get the length of the payload in byte and put it in the first
 %of the message
-message = strcat(char(numel(message)),message);
+
+% header = typecast(int32(numel(message)),'int8');
+packet = strcat( int32(numel(message)) ,char(message));
+% packet = [header message];    
+% disp(int8(message));
+
 
 %send message
-d_TcpStream.writeBytes(char(message));
+d_TcpStream.writeBytes(char(packet));
 d_TcpStream.flush;
 
 status = 1;
