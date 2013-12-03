@@ -23,11 +23,16 @@ for i = 1 : length(file_list)
     if (strcmp(file_list{i}, 'pvcamicl'))
         cell_args{end + 1} = '-lpv_icl32';
     end
+    
+    % to compile the modified pvcamacq you need to enter 
+    % mex -v -L -lpvcam32 pvcamacq.c pvcamutil.c "C:\Program Files\MATLAB\R2011b\extern\lib\win32\microsoft\libut.lib"
+    
     %cell_args{end + 1} = '-output';
     %cell_args{end + 1} = sprintf('%s.dll', file_list{i});
     cell_args{end + 1} = sprintf('%s.c', file_list{i});
     cell_args{end + 1} = 'pvcamutil.c';
-    mex(cell_args{:});
+    cell_args
+    mex( cell_args{:});
 end
 cd(old_path)
 return
