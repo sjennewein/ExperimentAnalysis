@@ -19,7 +19,7 @@ function [ backgroundFit, backgroundCorrection ] = FitBackground( picture, ROI )
     
     %prepare data for fitting and fit
     [x, y, z] = prepareSurfaceData(1:dimX, 1:dimY, background);
-    backgroundFit = fit([x,y],z,'poly44');
+    backgroundFit = fit([x,y],z,'poly22');
     
     %generate background correction matrix
     [x, y, z] = prepareSurfaceData(1:dimX, 1:dimY, picture);

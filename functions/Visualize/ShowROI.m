@@ -1,9 +1,7 @@
 function [ ] = ShowROI( picture, ROI )
 %SHOWROI Shows the ccd picture and draws ROI
 %   Shows the renormalized picture and draws the ROI
-    
-   
-    
+          
     imagesc(flipud( picture ));
     hold on;
     
