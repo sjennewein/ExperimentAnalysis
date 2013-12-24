@@ -2,7 +2,7 @@ function [ fitResult, gof ] = FitCloud( picture, ROI )
 %FITCLOUD Summary of this function goes here
 %   Detailed explanation goes here
 
-% create mask from ROI
+    % create mask from ROI
     [dimX, dimY] = size(picture);
     mask = NaN(dimX,dimY);
     roiX = (ROI(2,1)-ROI(1,1))+1;
@@ -14,7 +14,7 @@ function [ fitResult, gof ] = FitCloud( picture, ROI )
     
     [x, y, z] = prepareSurfaceData(1:dimX, 1:dimY, cloud);
     
-    %define fit function
+    %define Bivariate Normal Distribution fit function
     ft = fittype(['z0' ...
                   ,'+ a * exp ( -1/(2 * (1 - cor^2))' ...
                   ,'* (((x-x0) / xWidth)^2' ...
