@@ -229,7 +229,7 @@ mxArray *pvcam_acquire(int16 hcam, uns16 nimage, uns16 nregion, rgn_type *region
 			mxDestroyArray(data_struct);
 			return(empty_struct);
 		}
-        Sleep(1);
+        //Sleep(1);
 	}
 	
 	// uninitialize exposure sequence
