@@ -16,7 +16,7 @@ classdef ImageResult < handle
     methods
         function this = ImageResult(picture, roi, calibration, exposure)
             this.ROI = roi;
-            this.original = picture ./ (exposure * calibration * 90); %TODO change 90 to automatic
+            this.original = picture ./ (exposure * calibration); %TODO change 90 to automatic
             this.calibration = calibration; % fluoresence of a single atom
             this.exposure = exposure;
             this.process;
@@ -33,9 +33,9 @@ classdef ImageResult < handle
     
     methods (Access = private)
         function this = process(this)
-            this.fitBackground();
-            this.fitCloud();
+            this.fitBackground();            
             this.flattenImage();
+            this.fitCloud();
         end       
         
         function this = fitCloud(this)
@@ -52,7 +52,7 @@ classdef ImageResult < handle
             cloudMask = ones(roiX,roiY);
             mask(x1:x2,y1:y2) = cloudMask;
     
-            cloud = this.original .* mask;
+            cloud = this.flat .* mask;
     
             [x, y, z] = prepareSurfaceData(1:dimX, 1:dimY, cloud);
     
