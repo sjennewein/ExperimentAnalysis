@@ -1,5 +1,6 @@
 #include "thdefin.h"
 #include "thlib.h"
+#include "mex.h"
 
 void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]) 
 {
@@ -10,7 +11,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 	int retCode;
 	int flags;	
 	
-	while(TH_CTCStatus()==0) waitloop++; //wait until card is ready
+	//while(TH_CTCStatus()==0) waitloop++; //wait until card is ready
 	
 	retCode = TH_StopMeas();
     if(retCode<0)
@@ -26,12 +27,12 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 		mexErrMsgTxt("\nError in GetBlock. Aborted.\n ");		
 	}
 	
-	flags = TH_GetFlags();
-	if(flags&FLAG_OVERFLOW)
-	{
-		mxDestroyArray(data_struct);
-		mexErrMsgTxt("\nOverflow\n ");
-	}
+// 	flags = TH_GetFlags();
+// 	if(flags&FLAG_OVERFLOW)
+// 	{
+// 		mxDestroyArray(data_struct);
+// 		mexErrMsgTxt("\nOverflow\n ");
+// 	}
 	
 	plhs[0] = data_struct;
 }

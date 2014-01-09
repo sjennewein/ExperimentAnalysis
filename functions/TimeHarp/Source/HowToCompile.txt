@@ -1,0 +1,2 @@
+mex -L -lThlib StartStandard.c
+mex -L -lThlib ReadStandard.c
