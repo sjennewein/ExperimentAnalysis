@@ -7,6 +7,8 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 	int waitloop = 0;
 	//unsigned int counts[BLOCKSIZE];
 	mxArray 	 *data_struct;
+    mxArray      *resolution_struct;
+    float        *resolution_ptr;
 	unsigned int *data_ptr;
 	int retCode;
 	int flags;	
@@ -20,6 +22,10 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 	data_struct = mxCreateNumericMatrix(1, BLOCKSIZE, mxUINT32_CLASS,mxREAL);
 	data_ptr = (unsigned int*) mxGetData(data_struct);
 	
+    resolution_struct = mxCreateNumericMatrix(1,1,mxSINGLE_CLASS,mxREAL);
+    resolution_ptr = (float*) mxGetData(resolution_struct);
+    *resolution_ptr = TH_GetResolution();
+    
 	retCode = TH_GetBlock(data_ptr,0);
 	if(retCode<0)
 	{
@@ -35,4 +41,5 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 // 	}
 	
 	plhs[0] = data_struct;
+    plhs[1] = resolution_struct;
 }
