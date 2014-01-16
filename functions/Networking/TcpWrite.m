@@ -20,9 +20,11 @@ d_TcpStream = DataOutputStream(tcpStream);
 %of the message
 
 % header = typecast(int32(numel(message)),'int8');
-packet = strcat( int32(numel(message)) ,char(message));
+packet = strcat( int16(numel(message)) ,char(message));
 % packet = [header message];    
-% disp(int8(message));
+disp(message);
+disp(int8(packet));
+disp(dec2bin(int8(packet)));
 
 
 %send message
