@@ -1,7 +1,7 @@
 classdef ImageResult < handle
-    properties (SetAccess = private)
-        Parameters = containers.Map();
+    properties (SetAccess = private)       
         original;   %original ccd picture (rescaled)
+        rescaled;
         flat;       %picture with subtracted background
         background; %background picture from fit
         cloudFit;   %cloud fit object
@@ -11,14 +11,18 @@ classdef ImageResult < handle
         ROI;    %region of interest [x1,y1; x2,y2]   
         calibration; %counts(adu) per microsecond
         exposure;    %exposure time in microseconds
-        name;
+        sequences;
+        filename;
     end
     methods
-        function this = ImageResult(picture, roi, calibration, exposure)
+        function this = ImageResult(picture, roi, calibration, saturation, sequences, filename)
             this.ROI = roi;
-            this.original = picture ./ (exposure * calibration); %TODO change 90 to automatic
-            this.calibration = calibration; % fluoresence of a single atom
-            this.exposure = exposure;
+            this.filename = filename;
+            this.sequences = sequences;
+            this.original = picture;
+            this.exposure = 10; %exposure time in microsecond
+            this.rescaled = picture ./ (this.exposure * calibration * (saturation/(1+saturation)) * sequences);
+            this.calibration = calibration; % fluoresence of a single atom            
             this.process;
         end
         
@@ -28,6 +32,14 @@ classdef ImageResult < handle
             x2 = this.ROI(2,1);
             y2 = this.ROI(2,2);           
             atoms = sum(sum(this.flat(x1:x2,y1:y2)));
+        end
+        
+        function atoms = AtomsFromFit(this)
+            x1 = this.ROI(1,1);
+            y1 = this.ROI(1,2);
+            x2 = this.ROI(2,1);
+            y2 = this.ROI(2,2);
+            atoms = quad2d(this.cloudFit,x1,x2,y1,y2);
         end
     end
     
@@ -40,7 +52,7 @@ classdef ImageResult < handle
         
         function this = fitCloud(this)
             % create mask from ROI
-            [dimX, dimY] = size(this.original);
+            [dimX, dimY] = size(this.rescaled);
             x1 = this.ROI(1,1);
             x2 = this.ROI(2,1);
             y1 = this.ROI(1,2);
@@ -92,11 +104,11 @@ classdef ImageResult < handle
         end
         
         function this = flattenImage(this)
-            this.flat = this.original - this.background;
+            this.flat = this.rescaled - this.background;
         end
         
         function this = fitBackground(this)
-            [dimX, dimY] = size(this.original);
+            [dimX, dimY] = size(this.rescaled);
             x1 = this.ROI(1,1);
             x2 = this.ROI(2,1);
             y1 = this.ROI(1,2);
@@ -112,14 +124,14 @@ classdef ImageResult < handle
             backgroundROI(x1:x2,y1:y2) = cloudMask;
     
             %apply roi mask
-            maskedPicture = this.original .* backgroundROI;
+            maskedPicture = this.rescaled .* backgroundROI;
     
             %prepare data for fitting and fit
             [x, y, z] = prepareSurfaceData(1:dimX, 1:dimY, maskedPicture);
             [this.backgroundFit, this.backgroundGOF] = fit([x,y],z,'poly22');
     
             %generate background correction matrix
-            [x, y, ~] = prepareSurfaceData(1:dimX, 1:dimY, this.original);
+            [x, y, ~] = prepareSurfaceData(1:dimX, 1:dimY, this.rescaled);
             this.background = reshape(feval(this.backgroundFit,x,y),dimX,dimY);
         end
     end 
