@@ -78,7 +78,9 @@ classdef ImageResult < handle
             opts = fitoptions( ft );
             opts.Algorithm = 'Levenberg-Marquardt';
             opts.Display = 'Off';
-            opts.Lower = [-Inf -Inf -Inf -Inf -Inf -Inf];
+%             minValue = realmin('double');
+%             opts.Lower = [minValue minValue minValue minValue minValue minValue];
+            opts.Lower = [-Inf -0.9 -Inf -Inf -Inf -Inf -Inf];
             opts.MaxFunEvals = 600;
             opts.MaxIter = 1000;
     
@@ -88,7 +90,7 @@ classdef ImageResult < handle
             [value, column] = max(value); % find maximum in vector
     
             a_start = value;
-            cor_start = 0;
+            cor_start = 1;
             x0_start = row(column);
             xWidth_start = 10;
             y0_start = column;
@@ -97,7 +99,8 @@ classdef ImageResult < handle
     
             opts.StartPoint = [ a_start cor_start x0_start xWidth_start ...
                                 y0_start yWidth_start z0_start];
-            opts.Upper = [Inf Inf Inf Inf Inf Inf];
+%             maxValue = realmax('double');
+            opts.Upper = [Inf 0.9 Inf Inf Inf Inf Inf];
     
             %perform the fit
             [this.cloudFit, this.cloudGOF] = fit( [x, y], z, ft, opts );
