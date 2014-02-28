@@ -102,7 +102,7 @@ classdef ImageResult < handle
             opts.Algorithm = 'Levenberg-Marquardt';
             opts.Display = 'Off';
 
-            opts.Lower = [-Inf -Inf -Inf -Inf -Inf -Inf -Inf];
+            opts.Lower = [-Inf -0.9 -Inf -Inf -Inf -Inf -Inf];
             opts.MaxFunEvals = 600;
             opts.MaxIter = 1000;
     
@@ -121,7 +121,7 @@ classdef ImageResult < handle
     
             opts.StartPoint = [ a_start cor_start x0_start xWidth_start ...
                                 y0_start yWidth_start z0_start];
-            opts.Upper = [Inf Inf Inf Inf Inf Inf Inf];
+            opts.Upper = [Inf 0.9 Inf Inf Inf Inf Inf];
     
             %perform the fit
             [this.cloudFit, this.cloudGOF] = fit( [x, y], z, ft, opts );
