@@ -1,4 +1,4 @@
-function  DeltaFitPicture( data )
+function delta =  Residual( data )
 %UNTITLED4 Summary of this function goes here
 %   Detailed explanation goes here
     if(~iscell(data))
@@ -19,14 +19,24 @@ function  DeltaFitPicture( data )
                           num2str(data{iData}.pValue(iParameter)), ...
                           data{iData}.pUnit{iParameter}, '_');
         end
-        figure('name', figureTitle);
+        figureTitle = strcat(figureTitle,'Residual');
+        figure('name', figureTitle);        
         
         [dimX, dimY] = size(data{iData}.flat);
         [x,y,~] = prepareSurfaceData(1:dimX,1:dimY,data{iData}.flat);
         fit = feval(data{iData}.cloudFit,x,y);
         delta = data{iData}.flat - reshape(fit,dimX,dimY);
+        subplot(2,1,1);
         imagesc(delta);        
         colorbar;
+         hold on;
+        title(figureTitle,'Interpreter','None');
+        hold off;
+        subplot(2,1,2);
+        hist(delta(:),500);
+        figureTitle = strcat(figureTitle, '_Histogram');
+        hold on;
+        title(figureTitle,'Interpreter','None');
         hold off;
     end
     

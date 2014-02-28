@@ -18,7 +18,7 @@ function PlotNrOfAtomsVS( parameter, data )
     xAxis  = zeros(1,numel(data));
     atomsPicture = zeros(1,numel(data));
     atomsFit = zeros(1,numel(data));
-    
+    paramIndex = 0;
     for iData = 1:numel(data)        
         paramIndex = getIndexOfParameter(parameter, data{iData}.pName);
         xAxis(iData) = data{iData}.pValue(paramIndex);
@@ -31,6 +31,8 @@ function PlotNrOfAtomsVS( parameter, data )
     hold on;
     plot(xAxis,atomsPicture,'Or');
     plot(xAxis,atomsFit,'Xb');
+    ylabel('Nr of Atoms');
+    xlabel(strcat(data{1}.pName{paramIndex}, ' [',data{1}.pUnit{paramIndex}, ']'));
     legend('Atoms from Picture','Atoms from Fit','Location','Best');
     hold off;
 end
