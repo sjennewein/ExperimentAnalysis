@@ -1,4 +1,12 @@
 function dy=OBE(t,y,RabiT,Rabi,delta)
+%Creates the system of differential equations called Optical Bloch Equations (OBE)
+%with a time-dependent excitaion for a 2-lvl system. 
+%Inputs: t= 1D array : time for excitation shape interpolation
+%        y= 3D vector: Coefficients of the density operator (y(1)-> |e><g|, y(2)-> |g><e|,y(3)-> |e><e|)
+%        RabiT= 1D array : time array of the excitation
+%        Rabi= 1D array : shape of the excitation
+%        delta= scalar : detuning
+
 Gam=2*pi*6e6;
 Rabi = interp1(RabiT,Rabi,t); %Interpolate shape of excitation
 dy = zeros(3,1);
