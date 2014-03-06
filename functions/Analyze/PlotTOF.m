@@ -23,7 +23,7 @@ function [time, xWidth, yWidth] = PlotTOF( data )
         yWidth(iData) = coeff(6);
     end
     
-    pixelsize = 0.5; %each pixel is 0.5 micrometer
+    pixelsize = 0.5; %each pixel corresponds to 0.5 micrometer at the atoms
     xWidth = xWidth * pixelsize;
     yWidth = yWidth * pixelsize;
     
