@@ -6,7 +6,7 @@ function XSlice( data )
     end
     
     for iData = 1:numel(data)
-        if(~isa(data{iData},'ImageResult'))
+        if(~(isa(data{iData},'ImageResult') || isa(data{iData},'SmallImage')))
             error('Only data of type ImageResult can be processed');
         end            
     end
