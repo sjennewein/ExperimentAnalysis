@@ -15,3 +15,14 @@ for delta=DeltaSpan
 [T Y] = ode45(@(t,y) OBE(t,y,RabiT,Rabi,delta),Tspan,y0); 
 plot(T,abs(Y(:,3)))
 end;
+
+delta=0;
+SatSpan=0.01:0.2:1;
+figure()
+hold on
+
+for s=SatSpan
+Rabi=Gam*sqrt(s/2)*Pulse2(:,2)'/max(Pulse2(:,2));
+[T Y] = ode45(@(t,y) OBE(t,y,RabiT,Rabi,delta),Tspan,y0); 
+plot(T,abs(Y(:,3)/max(Y(:,3))))
+end;

@@ -7,7 +7,7 @@ function dy=OBE(t,y,RabiT,Rabi,delta)
 %        Rabi= 1D array : shape of the excitation
 %        delta= scalar : detuning
 
-Gam=2*pi*6e6;
+Gam=2*pi*6.06e6;
 Rabi = interp1(RabiT,Rabi,t); %Interpolate shape of excitation
 dy = zeros(3,1);
 
