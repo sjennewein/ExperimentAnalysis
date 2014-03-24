@@ -1,4 +1,4 @@
-function PlotNrOfAtomsVS( parameter, data )
+function [xAxis,atomsPicture,atomsFit] = PlotNrOfAtomsVS( parameter, data )
 %UNTITLED3 Summary of this function goes here
 %   Detailed explanation goes here
     if(~iscell(data))
