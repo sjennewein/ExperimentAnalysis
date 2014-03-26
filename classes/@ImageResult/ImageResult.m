@@ -36,7 +36,8 @@ classdef ImageResult < handle
             this.sequences = sequences;
             this.original = picture;
             this.exposure = exposure; %exposure time in microsecond
-            this.rescaled = picture ./ (this.exposure * calibration * (saturation/(1+saturation)) * sequences);
+            croppedPicture = picture(5:end-5,5:end-5); %we remove 5 pixels on each side because they are black - zero counts
+            this.rescaled = croppedPicture ./ (this.exposure * calibration * (saturation/(1+saturation)) * sequences);
             this.calibration = calibration; % fluoresence of a single atom            
             this.process;
         end
