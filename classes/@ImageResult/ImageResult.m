@@ -19,7 +19,7 @@ classdef ImageResult < handle
         cloudGOF;   %cloud goodness of fit        
         backgroundFit; %background fit object
         backgroundGOF; %background goodness of fit
-        ROI;    %region of interest [x1,y1; x2,y2]   
+        ROI;    %region of interest [xmin,ymin; xmax,ymax]   
         calibration; %counts(adu) per microsecond
         exposure;    %exposure time in microseconds
         sequences;
@@ -36,25 +36,27 @@ classdef ImageResult < handle
             this.sequences = sequences;
             this.original = picture;
             this.exposure = exposure; %exposure time in microsecond
-            croppedPicture = picture(5:end-5,5:end-5); %we remove 5 pixels on each side because they are black - zero counts
-            this.rescaled = croppedPicture ./ (this.exposure * calibration * (saturation/(1+saturation)) * sequences);
+            this.rescaled = picture ./ (this.exposure * calibration * (saturation/(1+saturation)) * sequences);
             this.calibration = calibration; % fluoresence of a single atom            
             this.process;
         end
         
         function atoms = AtomsFromPicture(this)
-            x1 = this.ROI(1,1);
-            y1 = this.ROI(1,2);
-            x2 = this.ROI(2,1);
-            y2 = this.ROI(2,2);           
+            %ATTENTION the picture x-axis corresponds to a column and the
+            %picture y-axis corresponds to a row. That's why it's the
+            %other way around in here.
+            y1 = this.ROI(1,1);
+            x1 = this.ROI(1,2);
+            y2 = this.ROI(2,1);
+            x2 = this.ROI(2,2);           
             atoms = sum(sum(this.flat(x1:x2,y1:y2)));
         end
         
         function atoms = AtomsFromFit(this)
-            x1 = this.ROI(1,1);
-            y1 = this.ROI(1,2);
-            x2 = this.ROI(2,1);
-            y2 = this.ROI(2,2);
+            y1 = this.ROI(1,1);
+            x1 = this.ROI(1,2);
+            y2 = this.ROI(2,1);
+            x2 = this.ROI(2,2);
             atoms = quad2d(this.cloudFit,x1,x2,y1,y2);
         end
     end
@@ -73,10 +75,10 @@ classdef ImageResult < handle
             % region of interest is only used for guessing the initial
             % start parameter
             
-            x1 = this.ROI(1,1);
-            x2 = this.ROI(2,1);
-            y1 = this.ROI(1,2);
-            y2 = this.ROI(2,2);           
+            y1 = this.ROI(1,1);
+            y2 = this.ROI(2,1);
+            x1 = this.ROI(1,2);
+            x2 = this.ROI(2,2);           
             
             mask = NaN(dimX,dimY);
             roiX = (x2-x1)+1;
@@ -134,10 +136,10 @@ classdef ImageResult < handle
         
         function this = fitBackground(this)
             [dimX, dimY] = size(this.rescaled);
-            x1 = this.ROI(1,1);
-            x2 = this.ROI(2,1);
-            y1 = this.ROI(1,2);
-            y2 = this.ROI(2,2);
+            y1 = this.ROI(1,1);
+            y2 = this.ROI(2,1);
+            x1 = this.ROI(1,2);
+            x2 = this.ROI(2,2);
             
             %generate mask to select the background
             backgroundROI = ones(dimX,dimY);
