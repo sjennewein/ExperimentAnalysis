@@ -1,15 +1,12 @@
 function [xAxis,atomsPicture,atomsFit] = PlotNrOfAtomsVS( parameter, data )
-%UNTITLED3 Summary of this function goes here
-%   Detailed explanation goes here
+%[xAxis,atomsFromPicture,atomsFromFit] = PlotNrOfAtomsVS(parameter,data) 
+%   This function takes two parameter one is the parameter name for the
+%   x-axis.
+%   parameter is the the parameter name used for the X-axis
+%   data is an analyzed picture implementing the interface of ImageResult  
     if(~iscell(data))
         error('Data must be a cell array!');
-    end
-    
-    for iData = 1:numel(data)
-        if(~isa(data{iData},'ImageResult'))
-            error('Only data of type ImageResult can be processed');
-        end            
-    end
+    end  
     
     if(~ischar(parameter))
         error('Parameter name must be a character.');

@@ -1,14 +1,10 @@
 function PlotWidthVS( parameter, data )
-%UNTITLED Summary of this function goes here
-%   Detailed explanation goes here
+%PlotWidthVS(parameter,data) plots the width from the fit vs the given
+%parameter
+%parameter is the name of the parameter
+%data is a cell array 
     if(~iscell(data))
         error('Data must be a cell array!');
-    end
-    
-    for iData = 1:numel(data)
-        if( ~(isa(data{iData},'ImageResult') || isa(data{iData},'SmallImage')))
-            error('Only data of type ImageResult can be processed');
-        end            
     end
     
     if(~ischar(parameter))

@@ -1,15 +1,9 @@
 function ShowROI( data )
-%SHOWROI Shows the flattened picture and draws ROI
+%SHOWROI(data) Shows the flattened picture and draws ROI
 %   Shows the flattened picture and draws the ROI
       
     if(~iscell(data))
         error('Data must be a cell array!');
-    end
-    
-    for iData = 1:numel(data)
-        if(~isa(data{iData},'ImageResult'))
-            error('Only data of type ImageResult can be processed');
-        end            
     end
     
     for iData = 1:numel(data)

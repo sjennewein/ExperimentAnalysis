@@ -1,6 +1,6 @@
 function YSlice( data )
-%UNTITLED Summary of this function goes here
-%   Detailed explanation goes here
+%YSlice(data) Plots a slice of the 2d picture along the y-axis going
+%through the maximum of the fit
     if(~iscell(data))
         error('Data must be a cell array!');
     end   

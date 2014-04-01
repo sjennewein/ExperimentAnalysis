@@ -1,14 +1,8 @@
 function [time, xWidth, yWidth] = PlotTOF( data )
-%UNTITLED2 Summary of this function goes here
-%   Detailed explanation goes here
+%[time, xWidth, yWidth] = PlotTOF(data) 
+%plots the width vs time-of-flight and returns the fit data
     if(~iscell(data))
         error('Data must be a cell array!');
-    end
-    
-    for iData = 1:numel(data)
-        if(~isa(data{iData},'ImageResult'))
-            error('Only data of type ImageResult can be processed');
-        end            
     end
     
     xWidth = zeros(1,numel(data));

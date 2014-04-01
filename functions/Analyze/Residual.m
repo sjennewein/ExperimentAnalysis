@@ -1,14 +1,7 @@
 function delta =  Residual( data )
-%UNTITLED4 Summary of this function goes here
-%   Detailed explanation goes here
+%Residual(data) Shows the residual of the fit and the histogram
     if(~iscell(data))
         error('Data must be a cell array!');
-    end
-    
-    for iData = 1:numel(data)
-        if(~isa(data{iData},'ImageResult'))
-            error('Only data of type ImageResult can be processed');
-        end            
     end
     
     for iData = 1:numel(data)
