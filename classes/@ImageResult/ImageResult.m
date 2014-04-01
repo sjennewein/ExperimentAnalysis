@@ -42,21 +42,20 @@ classdef ImageResult < handle
         end
         
         function atoms = AtomsFromPicture(this)
-            %ATTENTION the picture x-axis corresponds to a column and the
-            %picture y-axis corresponds to a row. That's why it's the
-            %other way around in here.
-            y1 = this.ROI(1,1);
-            x1 = this.ROI(1,2);
-            y2 = this.ROI(2,1);
-            x2 = this.ROI(2,2);           
-            atoms = sum(sum(this.flat(x1:x2,y1:y2)));
+            %x from the picture corresponds to columns in the matrix
+            %y from the picture corresponds to rows in the matrix
+            x1 = this.ROI(1,1);
+            y1 = this.ROI(1,2);
+            x2 = this.ROI(2,1);
+            y2 = this.ROI(2,2);           
+            atoms = sum(sum(this.flat(y1:y2,x1:x2)));
         end
         
         function atoms = AtomsFromFit(this)
-            y1 = this.ROI(1,1);
-            x1 = this.ROI(1,2);
-            y2 = this.ROI(2,1);
-            x2 = this.ROI(2,2);
+            x1 = this.ROI(1,1);
+            y1 = this.ROI(1,2);
+            x2 = this.ROI(2,1);
+            y2 = this.ROI(2,2);
             atoms = quad2d(this.cloudFit,x1,x2,y1,y2);
         end
     end
@@ -70,21 +69,23 @@ classdef ImageResult < handle
         
         function this = fitCloud(this)
             % create mask from ROI
-            [dimX, dimY] = size(this.rescaled);
+            %x from the picture corresponds to columns in the matrix
+            %y from the picture corresponds to rows in the matrix
+            [dimY, dimX] = size(this.rescaled);
             
             % region of interest is only used for guessing the initial
             % start parameter
             
-            y1 = this.ROI(1,1);
-            y2 = this.ROI(2,1);
-            x1 = this.ROI(1,2);
-            x2 = this.ROI(2,2);           
+            x1 = this.ROI(1,1);
+            x2 = this.ROI(2,1);
+            y1 = this.ROI(1,2);
+            y2 = this.ROI(2,2);           
             
-            mask = NaN(dimX,dimY);
+            mask = NaN(dimY,dimX);
             roiX = (x2-x1)+1;
             roiY = (y2-y1)+1;
-            cloudMask = ones(roiX,roiY);
-            mask(x1:x2,y1:y2) = cloudMask;
+            cloudMask = ones(roiY,roiX);
+            mask(y1:y2,x1:x2) = cloudMask;
     
             cloud = this.flat .* mask;
     
@@ -116,9 +117,9 @@ classdef ImageResult < handle
     
             a_start = value;
             cor_start = 0.5;
-            x0_start = row(column);
+            x0_start = column;
             xWidth_start = 10;
-            y0_start = column;
+            y0_start = row(column);
             yWidth_start = 10;
             z0_start = 0;
     
@@ -135,20 +136,22 @@ classdef ImageResult < handle
         end
         
         function this = fitBackground(this)
-            [dimX, dimY] = size(this.rescaled);
-            y1 = this.ROI(1,1);
-            y2 = this.ROI(2,1);
-            x1 = this.ROI(1,2);
-            x2 = this.ROI(2,2);
+            %x from the picture corresponds to columns in the matrix
+            %y from the picture corresponds to rows in the matrix
+            [dimY, dimX] = size(this.rescaled);
+            x1 = this.ROI(1,1);
+            x2 = this.ROI(2,1);
+            y1 = this.ROI(1,2);
+            y2 = this.ROI(2,2);
             
             %generate mask to select the background
-            backgroundROI = ones(dimX,dimY);
+            backgroundROI = ones(dimY,dimX);
     
             %exclude cloud
             dimROIX = (x2-x1)+1;
             dimROIY = (y2-y1)+1;
-            cloudMask = NaN(dimROIX,dimROIY);
-            backgroundROI(x1:x2,y1:y2) = cloudMask;
+            cloudMask = NaN(dimROIY,dimROIX);
+            backgroundROI(y1:y2,x1:x2) = cloudMask;
     
             %apply roi mask
             maskedPicture = this.rescaled .* backgroundROI;
@@ -159,7 +162,7 @@ classdef ImageResult < handle
     
             %generate background correction matrix
             [x, y, ~] = prepareSurfaceData(1:dimX, 1:dimY, this.rescaled);
-            this.background = reshape(feval(this.backgroundFit,x,y),dimX,dimY);
+            this.background = reshape(feval(this.backgroundFit,x,y),dimY,dimX);
         end
     end 
 end

@@ -3,13 +3,7 @@ function YSlice( data )
 %   Detailed explanation goes here
     if(~iscell(data))
         error('Data must be a cell array!');
-    end
-    
-    for iData = 1:numel(data)
-        if(~(isa(data{iData},'ImageResult') || isa(data{iData},'SmallImage')))
-            error('Only data of type ImageResult can be processed');
-        end                
-    end
+    end   
     
     for iData = 1:numel(data)        
         figureTitle = '';        
@@ -26,8 +20,9 @@ function YSlice( data )
         
         figure('name', figureTitle);
         hold on;
-        plot(feval(data{iData}.cloudFit,x,1:400),'b');
-        plot(data{iData}.flat(x,1:400),'x-r');
+        [dimY, dimX] = size(data{iData}.flat);
+        plot(feval(data{iData}.cloudFit,x,1:dimY),'b');
+        plot(data{iData}.flat(1:dimY,x),'x-r');
         hold off;       
     end
 

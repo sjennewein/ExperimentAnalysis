@@ -26,8 +26,9 @@ function XSlice( data )
         
         figure('name', figureTitle);
         hold on;
-        plot(feval(data{iData}.cloudFit,1:400,y),'b');
-        plot(data{iData}.flat(:,y),'x-r');
+        [dimY, dimX] = size(data{iData}.flat);
+        plot(feval(data{iData}.cloudFit,1:dimX,y),'b');
+        plot(data{iData}.flat(y,1:dimX),'x-r');
         hold off;       
     end
 
