@@ -14,9 +14,10 @@ for iData = 1:numel(data)
             num2str(data{iData}.pValue(iParameter)), ...
             data{iData}.pUnit{iParameter}, '_');
     end
+    y0Index = getIndexOfParameter('y0',coeffnames(data{iData}.cloudFit));
     coeff = coeffvalues(data{iData}.cloudFit);
-    y0 = coeff(5);
-    y = round(y0);
+    y0 = coeff(y0Index);
+    y = round(y0)
     
     
     figure('name', figureTitle);

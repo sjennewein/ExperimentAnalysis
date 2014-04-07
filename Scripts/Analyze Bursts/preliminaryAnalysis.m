@@ -17,15 +17,15 @@ sequences = 100;
 finalHistogram = zeros(1,4096,'uint32');
 nrAtoms = zeros(1,numel(files));
 for i = 1:numel(files)
-    load(strcat(folder,files(i).name));    
-       result = ImageResult(cast(summedPicture,'double'),roi,adu,saturation,sequences,files(i).name);
-%      disp(result.AtomsFromPicture);
-%     nrAtoms(i) = result.AtomsFromPicture;
-       if(result.AtomsFromPicture >= 18 )
+    load(strcat(folder,files(i).name));
+    result = ImageResult(cast(summedPicture,'double'),roi,adu,saturation,sequences,files(i).name);
+    %      disp(result.AtomsFromPicture);
+    %     nrAtoms(i) = result.AtomsFromPicture;
+    if(result.AtomsFromPicture >= 18 )
         finalHistogram = finalHistogram + summedHistogram;
-       end
-%     atom = ImageResult(cast(summedPicture,'double'), [150 150;300 300], 238, 0.1);
-%     atom.AtomsFromPicture
+    end
+    %     atom = ImageResult(cast(summedPicture,'double'), [150 150;300 300], 238, 0.1);
+    %     atom.AtomsFromPicture
 end
 
 
