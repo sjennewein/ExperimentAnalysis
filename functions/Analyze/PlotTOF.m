@@ -2,7 +2,7 @@ function [time, xWidth, yWidth] = PlotTOF( data )
 %[time, xWidth, yWidth] = PlotTOF(data)
 %plots the width vs time-of-flight and returns the fit data
 if(~iscell(data))
-    error('Data must be a cell array!');
+    unc('Data must be a cell array!');
 end
 
 xWidth = zeros(1,numel(data));
@@ -36,25 +36,25 @@ opts.StartPoint = [2.3 1e-06];
 
 xcoeffname = coeffnames(xWidthFitResult);
 xcoeff     = coeffvalues(xWidthFitResult);
-xconfint   = confint(xWidthFitResult);
+xconfint   = confint(xWidthFitResult,0.68);
 
 ycoeffname = coeffnames(yWidthFitResult);
 ycoeff     = coeffvalues(yWidthFitResult);
-yconfint   = confint(yWidthFitResult);
+yconfint   = confint(yWidthFitResult,0.68);
 
 
 output = '';
 unit = {' µm', ' K'};
 for iCoeff = 1:numel(xcoeffname)
-    avg = abs(xcoeff(iCoeff) - xconfint(1,iCoeff));
+    unc = abs(xcoeff(iCoeff) - xconfint(1,iCoeff));
     output = [output, 'X', xcoeffname{iCoeff},' = ', ...
         num2str(xcoeff(iCoeff)), char(177), ...
-        num2str(avg), unit{iCoeff}, char(10)];
+        num2str(unc), unit{iCoeff}, char(10)];
     
-    avg = abs(ycoeff(iCoeff) - yconfint(1,iCoeff));
+    unc = abs(ycoeff(iCoeff) - yconfint(1,iCoeff));
     output = [output, 'Y', ycoeffname{iCoeff},' = ', ...
         num2str(ycoeff(iCoeff)), char(177),...
-        num2str(avg), unit{iCoeff}, char(10), char(10)];
+        num2str(unc), unit{iCoeff}, char(10), char(10)];
 end
 
 
