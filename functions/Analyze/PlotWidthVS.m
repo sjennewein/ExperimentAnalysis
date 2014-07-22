@@ -1,6 +1,6 @@
-function PlotWidthVS( parameter, data )
-%PlotWidthVS(parameter,data) plots the width from the fit vs the given
-%parameter
+function [xAxis,xWidth,yWidth] = PlotWidthVS( parameter, data )
+%[xAxis,xWidth,yWidth] = PlotWidthVS(parameter,data) 
+%plots the width from the fit vs the given parameter
 %parameter is the name of the parameter
 %data is a cell array 
     if(~iscell(data))
