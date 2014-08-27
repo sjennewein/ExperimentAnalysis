@@ -24,9 +24,7 @@ for iData = 1:numel(data)
         xWidth = coeff(xWidthIndex);
         yWidth = coeff(yWidthIndex);
         radius = round(mean([xWidth yWidth])/2);
-        mask = ((rr-x0).^2+(cc-y0).^2)<= (sigma(iSigma)*radius)^2;    
-        figure;
-        imagesc(mask);
+        mask = ((rr-x0).^2+(cc-y0).^2)<= (sigma(iSigma)*radius)^2;            
         encircled(iSigma) = sum(sum(data{iData}.flat .* mask));
     end
     figure;
