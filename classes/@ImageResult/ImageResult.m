@@ -118,9 +118,9 @@ classdef ImageResult < handle
             a_start = value;
             cor_start = 0.5;
             x0_start = column;
-            xWidth_start = 10;
+            xWidth_start = 2;
             y0_start = row(column);
-            yWidth_start = 10;
+            yWidth_start = 2;
             z0_start = 0;
     
             opts.StartPoint = [ a_start cor_start x0_start xWidth_start ...
