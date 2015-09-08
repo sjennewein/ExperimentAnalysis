@@ -4,7 +4,6 @@ classdef CalibrateIntensif < handle
 %   picture ((n x m) double matrix)
 %   roi (2x2 matrix roi values)
 %   calibration (Adu per microsecond)
-%   saturation (Saturation of the probe beam)
 %   exposure (Exposure time in microseconds)
 %   sequences (How many sequences the picture was illuminated)
 %   parameterName (Cell array of parameter names)
@@ -19,8 +18,7 @@ classdef CalibrateIntensif < handle
         cloudGOF;   %cloud goodness of fit        
         backgroundFit; %background fit object
         backgroundGOF; %background goodness of fit
-        ROI;    %region of interest [xmin,ymin; xmax,ymax]   
-        calibration; %counts(adu) per microsecond
+        ROI;    %region of interest [xmin,ymin; xmax,ymax]          
         exposure;    %exposure time in microseconds
         sequences;
         pName;
@@ -28,7 +26,7 @@ classdef CalibrateIntensif < handle
         pUnit;
     end
     methods
-        function this = ImageResult(picture, roi, calibration, exposure, sequences, parameterName, parameterValue, parameterUnit)
+        function this = CalibrateIntensif(picture, roi, exposure, sequences, parameterName, parameterValue, parameterUnit)
             this.pName = parameterName;
             this.pValue = parameterValue;
             this.pUnit = parameterUnit;
@@ -36,8 +34,7 @@ classdef CalibrateIntensif < handle
             this.sequences = sequences;
             this.original = picture;
             this.exposure = exposure; %exposure time in microsecond
-            this.rescaled = picture ./ (exposure * sequences);
-            this.calibration = calibration; % fluoresence of a single atom            
+            this.rescaled = picture ./ (exposure * sequences);                     
             this.process;
         end
         
