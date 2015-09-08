@@ -1,4 +1,4 @@
-classdef ImageResult < handle
+classdef CalibrateIntensif < handle
 %ImageResult Analyzes pictures and keeps the results and parameters 
 %   ImageResult(picture, roi, calibration, saturation, exposure, sequences, parameterName, parameterValue,parameterUnit)
 %   picture ((n x m) double matrix)
