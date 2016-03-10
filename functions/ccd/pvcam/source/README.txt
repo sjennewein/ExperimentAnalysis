@@ -1,0 +1,1 @@
+mex -v -L -lpvcam32 pvcamacq.c pvcamutil.c 

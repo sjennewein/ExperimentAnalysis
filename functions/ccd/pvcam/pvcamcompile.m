@@ -17,7 +17,8 @@ end
 % compile files
 old_path = pwd;
 cd(source_path)
-file_list = {'pvcamacq', 'pvcamclose', 'pvcamget', 'pvcamicl', 'pvcamopen', 'pvcamset', 'pvcamshutter'};
+% file_list = {'pvcamacq', 'pvcamclose', 'pvcamget', 'pvcamicl', 'pvcamopen', 'pvcamset', 'pvcamshutter'};
+file_list = {'pvcamacq'};
 for i = 1 : length(file_list)
     cell_args = {sprintf('-L%s', source_path), '-lpvcam32'};
     if (strcmp(file_list{i}, 'pvcamicl'))

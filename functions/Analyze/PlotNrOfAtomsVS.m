@@ -22,7 +22,9 @@ function [xAxis,atomsPicture,atomsFit] = PlotNrOfAtomsVS( parameter, data )
         atomsPicture(iData) = data{iData}.AtomsFromPicture;
         atomsFit(iData) = data{iData}.AtomsFromFit;
     end
-    
+    [xAxis,I] = sort(xAxis);
+    atomsPicture = atomsPicture(I);
+    atomsFit = atomsFit(I);
     title = strcat('AtomsVS',lower(parameter));
     figure('Name',title);
     hold on;
